@@ -1,0 +1,87 @@
+Registers
+  + there are 32 registers in MIPS computer
+  + registers are collections of D flip-flops
+  + each register has 32 flip-flips
+
+Special Purpose Registers
+-------------------------------------------------------------------------------------------------
+Registers    |     Name or Value   |    Purpose                         
+-------------------------------------------------------------------------------------------------
+$0                 Always = 0           Comparsions ; clearing registers
+$1                 $at                  Assembler temporary register
+$2                 $v0                  Value to be passed to function ; used in all system calls
+$3                 $v1                  Value to be passed to function
+$4                 $a0                  Argument passing to procedures ; used in syscalls 1,4,8
+$5                 $a1                  Argument passing to procedures ; used in syscall 5 *
+$6                 $a2                  Argument passing to procedures ;*
+$7                 $a3                  Argument passing to procedures ;*
+$26                $k0                  Reserved for use by operating system**
+$27                $k1                  Reserved for use by operating system**
+$28                $gp                  Pointer to global area
+$29                $sp                  Points to current top of stack
+$30                $fp                  Points to current top of frame
+$31                $ra                  Return address to exit procedure
+                                        *Argument passing past a total of four uses the stack
+                                        **Don't ever use these register
+-------------------------------------------------------------------------------------------------
+
+MIPS Temporary Registers
+----------------------------------------------------------------------------
+Registers    |    Name or Value   |    Purpose
+----------------------------------------------------------------------------
+$8                 $t0                  Holds a local (temp) variable
+$9                 $t1                  Holds a local (temp) variable
+$10                $t2                  Holds a local (temp) variable
+$11                $t3                  Holds a local (temp) variable
+$12                $t4                  Holds a local (temp) variable
+$13                $t5                  Holds a local (temp) variable
+$14                $t6                  Holds a local (temp) variable
+$15                $t7                  Holds a local (temp) variable
+$24                $t8                  Holds a local (temp) variable
+$25                $t9                  Holds a local (temp) variable
+----------------------------------------------------------------------------
+
+MIPS Saved Temporary Registers 
+ + s-registers hold data in programs
+----------------------------------------------------------------------------
+Registers    |    Name or Value   |    Purpose
+----------------------------------------------------------------------------
+$16               $s0                  Holds a saved temporary variable
+$17               $s1                  Holds a saved temporary variable
+$18               $s2                  Holds a saved temporary variable
+$19               $s3                  Holds a saved temporary variable
+$20               $s4                  Holds a saved temporary variable
+$21               $s5                  Holds a saved temporary variable
+$22               $s6                  Holds a saved temporary variable
+$23               $s7                  Holds a saved temporary variable
+
+REGISTER-REGISTER INSTRUCTIONS
+ + ADD
+   format : add $rd,$rs,$rt      [$rs] +[$rt] = [$rd]
+            addi $s1,$t2,27      [$t2] + 27   = [$s1]     
+ + SUBTRACT
+   format : sub $rd,$rs,$rt      [$rs] - [$rt] = [$rd]
+            sub $s1,$t2,27       [$t2] -  27   = [$s1] 
+ + MULTIPLY
+   format : mul $rd,$rs,$rt
+ + DIVIDE
+   format : div $rd,$rs,$rt
+ + LOAD IMMEDIATE
+   format : li $rd, #            li $t0,2405 : the number 2405 is loaded into register $t0
+ + MOVE
+   format : move $s5, $t3: [$t3] → [$s5]       ($t3 contents are not changed).
+            move is also a pseudo instruction
+  
+LOGICAL INSTRUCTIONS
+ + AND function:
+        and $s0, $t3, $t4: [$t3]•[$t4] → [$s0]        on a bitwise basis.
+ + OR is performed likewise:
+        or $s0, $t3, $t4: [$t3]+[$t4] → [$s0]         on a bitwise basis.
+ + andi/ori – These instructions are similar to addi, thus:
+        ori $t4, $t5, 0x0ff1: [$t5] + 0xff1 → [$t4]   on a bitwise basis.
+        andi $t4, $t5, 587: [$t5 ] • 587 → [$t4]      on a bitwise basis.
+ + NOR and XOR are functionally identical to “AND” and “OR.”
+        nor $t1, $t2, $t6: [$t2] + [$t6] → [$t1]      on a bitwise basis.
+        xor $s1, $s2, $s3: [$s2] [$s3] → [$s1]        on a bitwise basis.
+ + NOT is a simpler instruction, with only one operand:
+        not $t7, $s5: [$s5] → [$t7]                   on a bitwise basis.
