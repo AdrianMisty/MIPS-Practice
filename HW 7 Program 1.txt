@@ -8,43 +8,52 @@ and then quit. Note that the 0 is NOT to be printed out—it is not a value to b
 Name : AdrianMisty
 Date : 11/07/2017
 .text
-main:   la $t0,num1 
-        move $t7,$t0 
-next:   lw $t1,0($t0)
+main:   la $t0,num1     // Load the starting address
+        move $t7,$t0    // use add for later 
+	
+next:   lw $t1,0($t0)   // get the words
 	lw $t2,4($t0) 
-	beqz $t2,print 
-	ble $t1,$t2,cnt 
+	beqz $t2,print  // have all numbers been compared ?
+	ble $t1,$t2,cnt // #'s in the righ order ?
 	jal rev
 	j next
-cnt:   addi $t0,$t0,4 
+	
+cnt:   addi $t0,$t0,4  // 2 #'s are in order
        j next
+       
 rev: sub $sp,$sp,4 
-	sw $ra,0($sp) 
-	sw $t1,4($t0)
-	sw $t2,0($t0) 
-go: beq $t0,$t7,back 
-	sub $t0,$t0,4 
-	lw $t1,0($t0) 
-	lw $t2,4($t0) 
-	ble $t1,$t2,back 
-	jal rev 
-back: lw $ra,0($sp) 
-	addi $sp,$sp,4 
-	addi $t0,$t0,4 
-	jr $ra 
-print: la $t0,num1 
+     sw $ra,0($sp)    // $ra stored on the stack
+     sw $t1,4($t0)
+     sw $t2,0($t0)    // reverse 
+	
+go: beq $t0,$t7,back  // at top of list ?
+    sub $t0,$t0,4     // no. get next 2 word
+    lw $t1,0($t0)     // get 2 words
+    lw $t2,4($t0)     // ...
+    ble $t1,$t2,back  // are #'s in order
+    jal rev           // go back now
+     
+back: lw $ra,0($sp)   // position 0 has compare 
+      addi $sp,$sp,4  // getting next $ra
+      addi $t0,$t0,4  // move back for next compare
+      jr $ra          // next compare?
+      
+print: la $t0,num1    // Print results
+                      // end program
 nxwd: li $v0,1
-	lw $a0,0($t0)
-	beqz $a0,stop
-	syscall
-	li $a0,0x0a
-	li $v0,11
-	syscall
-	addi $t0,$t0,4
-	j nxwd
-stop: li $v0,10
-	syscall
-	.data
+      lw $a0,0($t0)
+      beqz $a0,stop
+      syscall
+      li $a0,0x0a
+      li $v0,11
+      syscall
+      addi $t0,$t0,4
+      j nxwd
+      
+stop: li $v0,10       // done
+      syscall
+
+.data
 num1: .word 53875
 num2: .word 36429
 num3: .word 88641
