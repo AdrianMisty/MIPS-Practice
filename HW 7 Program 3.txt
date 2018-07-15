@@ -7,34 +7,40 @@ Name : AdrianMisty
 Date : 11/07/2017
 
 .text
-main: la $t0,str 
-      la $t7,str 
-yomp: lb $t1,0($t0) 
+main: la $t0,str             // load string address to $t0
+      la $t7,str             // load string address to $t7
+      
+yomp:   lb $t1,0($t0)        // load first 2 characters for comparison 
 	lb $t2,1($t0)
-	beqz $t2,done 
-	ble $t1,$t2,count 
-	jal rever 
-	j yomp 
-count: addi $t0,$t0,1 
-	j yomp
-done: la $a0,str 	
+	beqz $t2,done        // if character = 0 -> done
+	ble $t1,$t2,count    // if in right order -> get next char
+	jal rever            // if not in right order -> go to rever
+	j yomp               // if in right position -> get next char
+	
+count:  addi $t0,$t0,1       // ++ current chara. address
+	j yomp               // return next chara. comparison
+	
+done:   la $a0,str 	     // print out string in alpha order + CR
 	li $v0,4
 	syscall
-	li $v0,10 
+	li $v0,10            // done
 	syscall
-rever: sub $sp,$sp,4 
-	sw $ra,($sp)
-	sb $t1,1($t0) 
+	
+rever:  sub $sp,$sp,4       // store content of $ra on stack
+	sw $ra,($sp)        // -- stack pointer
+	sb $t1,1($t0)       // exchange 2 chara. positions
 	sb $t2,0($t0)
-	beq $t0,$t7,gobackback 
-	sub $t0,$t0,1 
-	lb $t1,0($t0) 
-	lb $t2,1($t0)
-	ble $t1,$t2,gobackback
-	jal revere
-gobackback: addi $t0,$t0,1 
-	lw $ra,($sp)
-	addi $sp,$sp,4
-		jr $ra
+	beq $t0,$t7,gobackback  // if at 1st post. in string, then done
+	sub $t0,$t0,1           // -- letter pointer
+	lb $t1,0($t0)           // compare letter to next upstream letter
+	lb $t2,1($t0)        
+	ble $t1,$t2,gobackback  // if letters well placed, done
+	jal revere              // not done , move back to current post.
+	
+gobackback: addi $t0,$t0,1     // reverse done and move back to current post.
+	    lw $ra,($sp)
+	    addi $sp,$sp,4
+            jr $ra
+	    
 .data
 str: .asciiz "Hello, world!\n"
