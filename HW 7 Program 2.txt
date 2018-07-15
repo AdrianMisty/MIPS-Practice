@@ -5,33 +5,40 @@ Name : AdrianMisty
 Date : 11/07/2017
 
 .text
-main:   la $t9,array
-	li $t0,0 
-row:    beq $t0,20,done
-	li $t1,0 
-	mul $t4,$t0,80 
-	add $t9,$t9,$t4 
-	div $t2,$t0,2 
+main:   la $t9,array         // load array address
+	li $t0,0             // initialize row counter
+ 	
+row:    beq $t0,20,done      // done?
+	li $t1,0             // initialize column counter
+	mul $t4,$t0,80       // 
+	add $t9,$t9,$t4      // odd/even row?
+	div $t2,$t0,2        //
 	mfhi $t2
 	bnez $t2,orow
-erow:  li $t5,1 
-eloop: sw $t5,0($t9) 
-	addi $t1,$t1,1 
-	beq $t1,20,urow 
-	addi $t9,$t9,4 
-	addi $t5,$t5,1 
-	j eloop 
-urow:   addi $t0,$t0,1 
-	la $t9,array 
-	j row 
-orow:   li $t5,20 
-oloop:  sw $t5,0($t9) 
-	addi $t1,$t1,1 
-	beq $t1,20,urow 
-	addi $t9,$t9,4 
-	sub $t5,$t5,1 
-	j oloop 
-done:   li $v0,10 
+	
+erow:  li $t5,1              // initialize even row #
+            
+eloop: sw $t5,0($t9)         // store element
+	addi $t1,$t1,1       // ++ column counter
+	beq $t1,20,urow      // stored 20 col?
+	addi $t9,$t9,4       // no, then add / or go to next pos.
+	addi $t5,$t5,1       // ++ element value
+	j eloop              // again
+	
+urow:   addi $t0,$t0,1       // ++ row counter
+	la $t9,array         // reinitalize array address
+	j row                // next row now 
+	
+orow:   li $t5,20            // initialize row counter
+
+oloop:  sw $t5,0($t9)        // store elemt
+	addi $t1,$t1,1       // ++ column counter
+	beq $t1,20,urow      // store 20 col ?
+	addi $t9,$t9,4       // just like eloop...
+	sub $t5,$t5,1        //
+	j oloop              //
+	
+done:   li $v0,10            // done
 	syscall
 .data
 array: .space 1600
